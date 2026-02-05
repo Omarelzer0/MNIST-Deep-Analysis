@@ -1,0 +1,14 @@
+# 🧪 Task 2 Analysis: Custom Image Generalization Test
+
+### 1. The Result
+* **True Label:** 1
+* **Predicted Label:** 5
+* **Outcome:** ❌ Incorrect Classification.
+
+### 2. Diagnosis: Why did the model behave this way?
+The classification error is directly caused by a **Preprocessing Artifact** combined with the nature of the input drawing:
+
+* **The Root Cause (Thin Stroke):** The digit '1' was drawn using an extremely fine brush (very thin stroke width) in the drawing software (MS Paint).
+* **The Process (Downsampling Issue):** When the image was resized from its original resolution to the target **28x28** format, the thin line could not survive the compression. The downsampling algorithm caused the continuous vertical line to fade and fragment.
+* **The Result (Feature Loss):** Consequently, what the model actually received was not a continuous line, but rather a set of **disconnected pixels** (two isolated dots).
+* **Conclusion:** The model failed because the structural integrity of the digit was lost during preprocessing. It tried to classify these random disconnected dots and matched them to the closest pattern it could find (which happened to be '5'), illustrating the model's sensitivity to input quality and stroke thickness.
